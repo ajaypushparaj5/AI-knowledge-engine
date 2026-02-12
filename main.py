@@ -1,16 +1,21 @@
 from semanticsearch import SemanticSearch
+from chunker import chunk_text
 
 engine = SemanticSearch()
 
-engine.add([
-    "I love machine learning",
-    "Deep learning is powerful",
-    "Football is a fun sport",
-    "Messi is a great player",
-    "AI is changing the world"
-])
+with open("test_doc.txt", "r") as f:
+    text = f.read()
 
-results = engine.search("soccer player")
+chunks = chunk_text(text)
+
+print("Chunks created:", len(chunks))
+
+engine.add(chunks)
+
+query = input("Ask something: ")
+
+results = engine.search(query)
 
 for text, score in results:
-    print(text, score)
+    print("\nMATCH:", text)
+    print("Score:", score)
