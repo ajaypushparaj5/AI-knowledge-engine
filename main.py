@@ -18,6 +18,10 @@ except:
 query = input("Ask: ")
 results = engine.search(query)
 
-for text, score in results:
-    print("\nMATCH:", text)
-    print("Score:", score)
+print("\nTop matches:\n")
+
+for i, (text, score) in enumerate(results, 1):
+    print(f"{i}. Score: {score:.3f}")
+    print(text)
+    print("-" * 50)
+
