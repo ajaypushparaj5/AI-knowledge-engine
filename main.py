@@ -1,18 +1,18 @@
 from semanticsearch import SemanticSearch
 from chunker import chunk_text
+from pdf_loader import load_pdf
 
 engine = SemanticSearch()
 
-with open("test_doc.txt", "r") as f:
-    text = f.read()
+pdf_text = load_pdf("sample.pdf")
 
-chunks = chunk_text(text)
+chunks = chunk_text(pdf_text)
 
-print("Chunks created:", len(chunks))
+print("Chunks:", len(chunks))
 
 engine.add(chunks)
 
-query = input("Ask something: ")
+query = input("Ask about the PDF: ")
 
 results = engine.search(query)
 
