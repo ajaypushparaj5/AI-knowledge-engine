@@ -1,4 +1,5 @@
-def chunk_text(text, chunk_size=50, overlap=10):
+from config import CHUNK_OVERLAP, CHUNK_SIZE
+def chunk_text(text, chunk_size=CHUNK_SIZE, overlap=CHUNK_OVERLAP):
     words = text.split()
     chunks = []
 

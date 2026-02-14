@@ -1,6 +1,7 @@
 import numpy as np
-from embeddings import embed
-from vector_store import save_store, load_store
+from core.embeddings import embed
+from core.vector_store import save_store, load_store
+from config import TOP_K, THRESHOLD
 
 class SemanticSearch:
     def __init__(self):
@@ -13,7 +14,7 @@ class SemanticSearch:
             self.texts.append(t)
             self.vectors.append(e)
 
-    def search(self, query, top_k=5, threshold=0.3, debug=False):
+    def search(self, query, top_k=TOP_K, threshold=THRESHOLD, debug=False):
         query_vec = embed([query])[0]
 
         scores = []

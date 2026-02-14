@@ -1,6 +1,6 @@
-from semantic_search import SemanticSearch
-from chunker import chunk_text
-from pdf_loader import load_pdf
+from core.semantic_search import SemanticSearch
+from core.chunker import chunk_text
+from ingestion.pdf_loader import load_pdf
 
 
 engine = SemanticSearch()
