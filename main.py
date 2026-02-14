@@ -1,7 +1,7 @@
 from core.semantic_search import SemanticSearch
 from core.chunker import chunk_text
 from ingestion.pdf_loader import load_pdf
-
+import os
 
 engine = SemanticSearch()
 
@@ -10,18 +10,29 @@ try:
     print("Loaded memory.")
 except:
     print("Building new memory...")
-    pdf_text = load_pdf("sample.pdf")
-    chunks = chunk_text(pdf_text)
-    engine.add(chunks)
-    engine.save()
 
-query = input("Ask: ")
+    data_folder = "data"
+
+    for file in os.listdir(data_folder):
+        if file.endswith(".pdf"):
+            path = os.path.join(data_folder, file)
+            print("Indexing:", file)
+
+            text = load_pdf(path)
+            chunks = chunk_text(text)
+
+            engine.add(chunks, source=file)
+
+    engine.save() 
+    print("Memory saved.")
+
+query = input("\nAsk: ")
 results = engine.search(query)
 
 print("\nTop matches:\n")
 
-for i, (text, score) in enumerate(results, 1):
+for i, (entry, score) in enumerate(results, 1):
     print(f"{i}. Score: {score:.3f}")
-    print(text)
+    print(f"Source: {entry['source']}")
+    print(entry["text"])
     print("-" * 50)
-

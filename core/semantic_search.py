@@ -5,14 +5,19 @@ from config import TOP_K, THRESHOLD
 
 class SemanticSearch:
     def __init__(self):
-        self.texts = []
+        self.entries = []
         self.vectors = []
 
-    def add(self, texts):
+    def add(self, texts, source=None):
         embeddings = embed(texts)
+
         for t, e in zip(texts, embeddings):
-            self.texts.append(t)
+            self.entries.append({
+                "text": t,
+                "source": source
+            })
             self.vectors.append(e)
+
 
     def search(self, query, top_k=TOP_K, threshold=THRESHOLD, debug=False):
         query_vec = embed([query])[0]
@@ -25,14 +30,17 @@ class SemanticSearch:
             )
             scores.append(score)
 
-        ranked = sorted(zip(self.texts, scores),
+        ranked = sorted(zip(self.entries, scores),
                         key=lambda x: x[1],
                         reverse=True)
 
         if debug:
-            print("\nAll scores:\n")
-            for text, score in ranked[:10]:
-                print(f"{score:.3f} → {text[:80]}")
+            for entry, score in ranked:
+                print(f"Source: {entry['source']}")
+                print(f"Score: {score:.3f}")
+                print(entry["text"])
+                print("-" * 40)
+
 
         filtered = [r for r in ranked if r[1] >= threshold]
 
@@ -40,7 +48,6 @@ class SemanticSearch:
 
 
     def save(self):
-        save_store(self.texts, self.vectors)
-
+        save_store(self.entries, self.vectors)
     def load(self):
-        self.texts, self.vectors = load_store()
+        self.entries, self.vectors = load_store()
