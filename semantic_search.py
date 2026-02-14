@@ -13,7 +13,7 @@ class SemanticSearch:
             self.texts.append(t)
             self.vectors.append(e)
 
-    def search(self, query, top_k=5, threshold=0.3):
+    def search(self, query, top_k=5, threshold=0.3, debug=False):
         query_vec = embed([query])[0]
 
         scores = []
@@ -28,10 +28,15 @@ class SemanticSearch:
                         key=lambda x: x[1],
                         reverse=True)
 
-        # filter weak matches
+        if debug:
+            print("\nAll scores:\n")
+            for text, score in ranked[:10]:
+                print(f"{score:.3f} → {text[:80]}")
+
         filtered = [r for r in ranked if r[1] >= threshold]
 
         return filtered[:top_k]
+
 
     def save(self):
         save_store(self.texts, self.vectors)
