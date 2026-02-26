@@ -1,6 +1,7 @@
 from core.semantic_search import SemanticSearch
 from core.chunker import chunk_text
 from ingestion.pdf_loader import load_pdf
+from core.generator import generate_answer
 import os
 
 engine = SemanticSearch()
@@ -29,10 +30,17 @@ except:
 query = input("\nAsk: ")
 results = engine.search(query)
 
-print("\nTop matches:\n")
+
 
 for i, (entry, score) in enumerate(results, 1):
     print(f"{i}. Score: {score:.3f}")
     print(f"Source: {entry['source']}")
     print(entry["text"])
     print("-" * 50)
+
+context = "\n".join([entry["text"] for entry, score in results])
+
+answer = generate_answer(query, context)
+
+print("\nAnswer:\n")
+print(answer)
